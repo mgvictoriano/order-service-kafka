@@ -20,27 +20,21 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private ProductRepository productRepository; // Suponha que você tenha um repositório para produtos
+    private ProductRepository productRepository;
 
     public Orders createOrder(Orders orders, List<Long> productIds) {
-        // Defina a data de criação para o momento atual
-        orders.setCreationDate(LocalDateTime.now());
 
-        // Define o pedido como aberto
+        orders.setCreationDate(LocalDateTime.now());
         orders.setOpen(true);
 
-        // Calcula o valor total do pedido com base nos produtos associados
         double totalValue = calculateTotalValue(productIds);
         orders.setTotalValue(totalValue);
 
-        // Salva o pedido no banco de dados
         Orders savedOrder = orderRepository.save(orders);
 
-        // Associa os produtos ao pedido
         List<Product> products = productRepository.findAllById(productIds);
         savedOrder.setProducts(products);
 
-        // Salva novamente o pedido para atualizar a associação com os produtos
         savedOrder = orderRepository.save(savedOrder);
 
         return savedOrder;
@@ -51,8 +45,6 @@ public class OrderService {
     }
 
     private double calculateTotalValue(List<Long> productIds) {
-        // Implemente a lógica para calcular o valor total com base nos produtos
-        // Aqui, você pode consultar os produtos pelo ID e somar seus preços unitários.
         List<Product> products = productRepository.findAllById(productIds);
         double totalValue = 0.0;
         for (Product product : products) {
